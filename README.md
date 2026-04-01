@@ -1,3 +1,5 @@
-## System Architecture
+## 🏗 System Design & Architecture
 
-![System Design](https://app.eraser.io/workspace/EBRPzkYKmecsvEmRHVbn/embed)
+Below is the high-level system architecture of the project including microservices, API gateway, MongoDB, Docker containers, Kubernetes deployments, and monitoring stack.
+
+[![Architecture Diagram](https://app.eraser.io/workspace/EBRPzkYKmecsvEmRHVbn/embed)](https://app.eraser.io/workspace/EBRPzkYKmecsvEmRHVbn?origin=share)
