@@ -1,6 +1,5 @@
-<img width="2964" height="1127" alt="diagram-export-01-04-2026-22_16_02" src="https://github.com/user-attachments/assets/f40814c1-8cd3-47a9-9814-5eacb0b9562a" />
 
-# Finance Dashboard Backend
+<img width="2899" height="1200" alt="diagram-export-03-04-2026-15_30_46" src="https://github.com/user-attachments/assets/9fceaa82-a694-45c3-98fe-99ba01f7c554" />
 
 A Node.js & Express backend for a Finance Dashboard system supporting robust role-based access control, user management, and aggregated financial insights for front-end dashboards.
 
