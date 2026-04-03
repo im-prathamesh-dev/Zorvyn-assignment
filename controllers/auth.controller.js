@@ -22,22 +22,46 @@ exports.registerUser = async (req, res) => {
         console.log(error);
     }
 };
-exports.loginUser = async(req,res)=>{
-    try{
-        const { email ,password} = req.body;
-        const existingUser = await user.findOne({email});
-        if(!existingUser){
-            return res.status(400).json({message: "User does not exist"});
+exports.loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
         }
+
+        const existingUser = await user.findOne({ email });
+        
+        if (!existingUser) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        // Check if the user is inactive
+        if (existingUser.status === "inactive") {
+            return res.status(403).json({ message: "User account is inactive" });
+        }
+
         const isPasswordValid = await bcrypt.compare(password, existingUser.password);
-        if(!isPasswordValid){
-            return res.status(400).json({message: "Invalid credentials"});
+        
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: "Invalid credentials" });
         }
-        const token = jwt.sign({userId: existingUser._id}, process.env.JWT_SECRET);
-        res.status(200).json({token});
-    }catch(error){
-        res.status(500).json({message: "Server error"});
-        console.log(error);
-    
+
+        const token = jwt.sign({ userId: existingUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        
+        // Return token and user details (Frontend usually needs role to switch views)
+        res.status(200).json({
+            token,
+            user: {
+                _id: existingUser._id,
+                name: existingUser.name,
+                email: existingUser.email,
+                role: existingUser.role,
+                status: existingUser.status
+            }
+        });
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(500).json({ message: "Server error" });
     }
-}
+};
