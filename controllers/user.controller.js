@@ -1,9 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
-// @desc    Create a new user (Admin assigns role)
-// @route   POST /api/users
-// @access  Admin
 exports.createUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -13,7 +10,6 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Role validation
     const assignedRole = role && ["viewer", "analyst", "admin"].includes(role) ? role : "viewer";
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,7 +22,6 @@ exports.createUser = async (req, res) => {
 
     await newUser.save();
 
-    // Prevent returning password
     const userToReturn = newUser.toObject();
     delete userToReturn.password;
 
@@ -37,9 +32,6 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// @desc    Get all users
-// @route   GET /api/users
-// @access  Admin
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
@@ -50,14 +42,10 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// @desc    Update user role
-// @route   PUT /api/users/:id/role
-// @access  Admin
 exports.updateUserRole = async (req, res) => {
   try {
     const { role } = req.body;
     
-    // Validate role
     if (!["viewer", "analyst", "admin"].includes(role)) {
       return res.status(400).json({ message: "Invalid role" });
     }
@@ -79,14 +67,10 @@ exports.updateUserRole = async (req, res) => {
   }
 };
 
-// @desc    Update user status
-// @route   PUT /api/users/:id/status
-// @access  Admin
 exports.updateUserStatus = async (req, res) => {
   try {
     const { status } = req.body;
     
-    // Validate status
     if (!["active", "inactive"].includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
     }

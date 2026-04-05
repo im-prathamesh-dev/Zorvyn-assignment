@@ -4,7 +4,6 @@ const { getAllUsers, updateUserRole, updateUserStatus, createUser } = require(".
 const authMiddleware = require("../middleware/auth.middleware");
 const roleMiddleware = require("../middleware/role.middleware");
 
-// All user routes require authentication and admin role
 router.use(authMiddleware);
 router.use(roleMiddleware("admin"));
 

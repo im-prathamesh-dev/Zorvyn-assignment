@@ -1,13 +1,9 @@
 const Record = require("../models/Record");
 
-// @desc    Create a new record
-// @route   POST /api/records
-// @access  Admin
 exports.createRecord = async (req, res) => {
   try {
     const { amount, type, category, date, notes } = req.body;
     
-    // Basic validation
     if (!amount || !type || !category) {
       return res.status(400).json({ message: "Amount, type, and category are required" });
     }
@@ -33,15 +29,11 @@ exports.createRecord = async (req, res) => {
   }
 };
 
-// @desc    Get all records with optional filtering
-// @route   GET /api/records
-// @access  Viewer, Analyst, Admin
 exports.getRecords = async (req, res) => {
   try {
     const { type, category, startDate, endDate } = req.query;
     let query = {}; 
 
-    // Filters
     if (type) query.type = type;
     if (category) query.category = category;
     
@@ -62,9 +54,6 @@ exports.getRecords = async (req, res) => {
   }
 };
 
-// @desc    Update a record
-// @route   PUT /api/records/:id
-// @access  Admin
 exports.updateRecord = async (req, res) => {
   try {
     const { amount, type, category, date, notes } = req.body;
@@ -90,9 +79,6 @@ exports.updateRecord = async (req, res) => {
   }
 };
 
-// @desc    Delete a record
-// @route   DELETE /api/records/:id
-// @access  Admin
 exports.deleteRecord = async (req, res) => {
   try {
     const record = await Record.findByIdAndDelete(req.params.id);
@@ -108,12 +94,8 @@ exports.deleteRecord = async (req, res) => {
   }
 };
 
-// @desc    Get dashboard summary statistics
-// @route   GET /api/records/summary
-// @access  Analyst, Admin
 exports.getSummary = async (req, res) => {
   try {
-    // Pipeline to calculate total income and expense
     const aggregateData = await Record.aggregate([
       {
         $group: {
@@ -133,7 +115,6 @@ exports.getSummary = async (req, res) => {
 
     const netBalance = totalIncome - totalExpense;
 
-    // Pipeline to group by category totals
     const categoryData = await Record.aggregate([
       {
         $group: {
@@ -151,7 +132,6 @@ exports.getSummary = async (req, res) => {
       }
     ]);
 
-    // Recent activity (last 5 records)
     const recentActivity = await Record.find()
       .sort({ date: -1 })
       .limit(5)

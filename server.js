@@ -1,10 +1,17 @@
 require('dotenv').config();
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const app = express();
 const port = process.env.PORT || 3000;
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: 'Too many requests from this IP, please try again later.'
+});
+
+app.use(limiter);
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth.routes');
-// db connection 
 connectDB();
 app.get("/", (req, res) => {
   res.send("Finance Dashboard API running")

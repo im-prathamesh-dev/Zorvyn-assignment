@@ -36,7 +36,6 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
-        // Check if the user is inactive
         if (existingUser.status === "inactive") {
             return res.status(403).json({ message: "User account is inactive" });
         }
@@ -49,7 +48,6 @@ exports.loginUser = async (req, res) => {
 
         const token = jwt.sign({ userId: existingUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
         
-        // Return token and user details (Frontend usually needs role to switch views)
         res.status(200).json({
             token,
             user: {

@@ -13,7 +13,6 @@ module.exports = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // Fetch user from DB to get the latest role and status
     const user = await User.findById(decoded.userId);
     if (!user) {
       return res.status(401).json({ message: "User not found" });
